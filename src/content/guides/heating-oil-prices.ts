@@ -9,9 +9,9 @@ const last = K.lastDone('US', 'ho')!;
 export default defineGuide({
   id: 'heating-oil-prices', group: 'prices', order: 1, slug: 'heating-oil-prices',
   nav: 'Heating oil prices by state', card: `The ${K.ranked('ho').length} states of the federal survey, this week, with the change on a year.`,
-  title: 'Heating Oil Prices by State This Week, 2026-27 Winter',
-  description: `Heating oil prices by state from the federal weekly survey, 2026-27 winter: every state ranked, change on a year, wholesale spread and the cost of 150 gallons.`,
-  h1: 'Heating oil prices by state this week',
+  title: 'Home Heating Oil Prices per Gallon Today by State, 2026-27',
+  description: `Home heating oil prices per gallon today, federal survey, 2026-27 winter: every state ranked, change on a year, wholesale spread, cost of 150 gallons.`,
+  h1: 'Home heating oil prices per gallon today: compare states near you',
   intro: `The U.S. average was ${K.ppg(us.last[1])} a gallon in the week of ${K.day(us.last[0])}, before tax; pick your state for its own figure.`,
   resume: `Residential heating oil averaged ${K.ppg(us.last[1])} a gallon in the United States in the federal survey of ${K.day(us.last[0])}, ${K.dir(yo, 'up', 'down')} ${yo === null ? '' : K.pct(Math.abs(yo), 0)} from the same week a year earlier. ${top[0].name} was the most expensive of the ${top.length} surveyed states at ${K.ppg(K.price(top[0].code, 'ho')!)} and ${top[top.length - 1].name} the cheapest at ${K.ppg(K.price(top[top.length - 1].code, 'ho')!)}, a gap of ${K.ppg(K.price(top[0].code, 'ho')! - K.price(top[top.length - 1].code, 'ho')!)} a gallon, or ${K.usd(150 * (K.price(top[0].code, 'ho')! - K.price(top[top.length - 1].code, 'ho')!))} on a 150-gallon delivery. The Energy Information Administration collects these prices every Monday from October to March and publishes them on Wednesday, without taxes. Last winter the national price averaged ${K.ppg(last.avg!)} from November to March. The table below ranks every state, gives the change on a year and the spread over the wholesale price, and links to the page of each state with its own calculators.`,
   body: (h) => `

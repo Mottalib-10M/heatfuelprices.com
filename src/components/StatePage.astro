@@ -29,7 +29,7 @@ const id = stateId(def.slug);
 const path = route(id, lang);
 const parent = st.ho ? 'heating-oil-prices' : 'propane-prices';
 const parentName = st.ho ? 'Heating oil prices' : 'Propane prices';
-const h1 = st.ho ? `${st.name} heating oil and propane prices this week` : `${st.name} propane prices this week`;
+const h1 = st.ho ? `${st.name} heating oil and propane prices per gallon this week` : `${st.name} propane prices per gallon this week`;
 const jsonLd = [webApplicationSchema({ name: h1, description: def.description, path, lang }), articleSchema({ title: h1, description: def.description, path, lang }), webPageSchema({ name: h1, description: def.description, path, lang }), breadcrumbSchema([{ name: ui.breadcrumbHome, path: route('home', lang) }, { name: parentName, path: route(parent, lang) }, { name: st.name, path }])];
 if (def.faqs.length) jsonLd.push(faqSchema(def.faqs, lang));
 const card = (x: string) => guideById(x)?.card ?? (statePageById(x) ? statePageById(x)!.intro : '');

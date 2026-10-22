@@ -11,9 +11,9 @@ const regions = ['R1X', 'R1Y', 'R1Z', 'R20', 'R30', 'R40'].filter((r) => K.sum(r
 export default defineGuide({
   id: 'propane-prices', group: 'prices', order: 2, slug: 'propane-prices',
   nav: 'Propane prices by state', card: 'Residential propane in every surveyed state this week, from Florida to North Dakota.',
-  title: 'Propane Prices by State This Week, 2026-27 Heating Season',
-  description: `Propane prices by state from the federal weekly survey, 2026-27 heating season: every state ranked, change on a year and the cost of a 500 gallon tank fill.`,
-  h1: 'Propane prices by state this week',
+  title: 'Propane Prices per Gallon Today by State, 2026-27 Season',
+  description: `Propane prices per gallon today, from the federal weekly survey, 2026-27 season: every state ranked, change on a year and the cost of a 500 gallon tank fill.`,
+  h1: 'Propane prices per gallon today: compare states near you',
   intro: `Residential propane averaged ${K.ppg(us.last[1])} a gallon across the country in the week of ${K.day(us.last[0])}, before tax.`,
   resume: `Propane for home heating averaged ${K.ppg(us.last[1])} a gallon nationwide in the federal survey of ${K.day(us.last[0])}, ${K.dir(yo, 'up', 'down')} ${yo === null ? '' : K.pct(Math.abs(yo), 0)} on the same week of last year. The spread between states is far wider than for heating oil: ${hi.name} paid ${K.ppg(K.price(hi.code, 'pr')!)} and ${lo.name} ${K.ppg(K.price(lo.code, 'pr')!)}, so the same 400 gallons cost ${K.usd(400 * K.price(hi.code, 'pr')!)} in one and ${K.usd(400 * K.price(lo.code, 'pr')!)} in the other. A 500-gallon tank takes about 250 gallons when its gauge reads 30 % and it is filled to 80 %, which is ${K.usd(250 * us.last[1])} at the national average. The EIA surveys ${top.length} states every Monday from October to March and publishes on Wednesday, excluding taxes. Last winter the national price averaged ${K.ppg(last.avg!)} from November to March, and the wholesale price this week was ${us.wholesale ? K.ppg(us.wholesale) : 'not published'}.`,
   body: (h) => `
