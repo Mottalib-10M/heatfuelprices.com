@@ -1,0 +1,63 @@
+---
+/**
+ * A state page: the price lookup set on the state, the folded answer, the state's own text
+ * (src/content/states/<slug>.ts), then generated pieces built from the data asset: the season's curve and
+ * the winter-by-winter table. Generated pieces carry data-chrome; the prose of the content file is what
+ * makes the page.
+ */
+import PageLayout from '../layouts/PageLayout.astro';
+import Clamp from './Clamp.astro';
+import Tool from './Tool.astro';
+import Body from './Body.astro';
+import SeasonChart from './SeasonChart.astro';
+import { route, ROUTES } from '../i18n/routes';
+import { label } from '../i18n/nav';
+import { t } from '../i18n/ui';
+import { guideById, statePageById, stateId } from '../lib/pages';
+import { helpers, SOURCES, table } from '../lib/helpers';
+import { stateBySlug, sum } from '../lib/data';
+import { KIT as K } from '../lib/kit';
+import { articleSchema, faqSchema, breadcrumbSchema, webPageSchema, webApplicationSchema } from '../lib/seo';
+import { AUTHOR_NAME } from '../data/site-config';
+import type { StateDef } from '../lib/page-types';
+interface Props { def: StateDef }
+const { def } = Astro.props;
+const lang = 'en';
+const ui = t(lang);
+const st = stateBySlug(def.slug);
+const id = stateId(def.slug);
+const path = route(id, lang);
+const parent = st.ho ? 'heating-oil-prices' : 'propane-prices';
+const parentName = st.ho ? 'Heating oil prices' : 'Propane prices';
+const h1 = st.ho ? `${st.name} heating oil and propane prices this week` : `${st.name} propane prices this week`;
+const jsonLd = [webApplicationSchema({ name: h1, description: def.description, path, lang }), articleSchema({ title: h1, description: def.description, path, lang }), webPageSchema({ name: h1, description: def.description, path, lang }), breadcrumbSchema([{ name: ui.breadcrumbHome, path: route('home', lang) }, { name: parentName, path: route(parent, lang) }, { name: st.name, path }])];
+if (def.faqs.length) jsonLd.push(faqSchema(def.faqs, lang));
+const card = (x: string) => guideById(x)?.card ?? (statePageById(x) ? statePageById(x)!.intro : '');
+const related = def.related.filter((x) => ROUTES.some((r) => r.id === x)).map((x) => ({ href: route(x, lang), name: label(x), description: card(x) }));
+const sources = [...(st.ho ? ['eia_ho_weekly'] : []), 'eia_pr_weekly', ...(st.code === 'NY' ? ['nyserda_ho'] : []), 'eia_wfo', 'noaa_hdd', 'acs_b25040'].map((k) => ({ name: SOURCES[k].label, url: SOURCES[k].url }));
+const fuels = (st.ho ? ['ho', 'pr'] : ['pr']) as Array<'ho' | 'pr'>;
+const seasonRows = (f: 'ho' | 'pr') => sum(st.code, f)!.seasons.slice().reverse().map((x) => [x.s, x.oct ? K.ppg(x.oct) : 'n/a', x.avg ? K.ppg(x.avg) : 'in progress', `${K.ppg(x.max[1])} (${K.day(x.max[0])})`]);
+const sizes = (f: 'ho' | 'pr') => (f === 'ho' ? [100, 150, 200, 275] : [100, 250, 400, 800]);
+const costRows = fuels.map((f) => [f === 'ho' ? 'Heating oil' : 'Propane', K.ppg(K.price(st.code, f)!), ...sizes(f).map((g) => `${K.num(g)} gal: ${K.usd(g * K.price(st.code, f)!)}`)]);
+---
+<PageLayout title={def.title} description={def.description} lang={lang} jsonLd={jsonLd} faqs={def.faqs} related={related} sources={sources} breadcrumbs={[{ label: parentName, href: route(parent, lang) }, { label: st.name }]}>
+  <article>
+    <header class="mb-4">
+      <h1 class="font-serif text-[1.75rem] font-bold text-navy-900 max-sm:leading-tight sm:text-3xl md:text-4xl">{h1}</h1>
+      <p class="mt-2 text-base text-navy-700 sm:text-lg">{def.intro}</p>
+    </header>
+    <div data-outil data-chrome class="mb-4"><Tool kind="price" arg={{ st: st.code, fuel: fuels[0] }} idPrefix={`s-${st.code.toLowerCase()}`} /></div>
+    <p class="mb-6 text-sm text-navy-600">{ui.reviewedBy} <a href={route('about', lang)} class="underline hover:text-navy-900">{AUTHOR_NAME}</a> · <a href={route('method', lang)} class="underline hover:text-navy-900">{label('method')}</a> · EIA survey of <time datetime={K.L.last_week}>{K.day(K.L.last_week)}</time>, published {K.day(K.L.release_date)}, excluding taxes</p>
+    <Clamp text={def.resume} lang={lang} id={`clamp-${def.slug}`} class="mb-8" />
+    {fuels.map((f) => <SeasonChart code={st.code} fuel={f} name={st.name} />)}
+    <Body html={def.body(helpers())} path={path} />
+    <section data-chrome class="mt-10">
+      <h2 class="font-serif text-2xl font-bold text-navy-900">What a delivery costs in {st.name} at this week's average</h2>
+      <Fragment set:html={table(['Fuel', 'Price a gallon', 'Order', 'Order', 'Order', 'Order'], costRows, `EIA weekly survey of ${K.day(K.L.last_week)}, excluding taxes and any delivery fee.`, ['l', 'r', 'r', 'r', 'r', 'r'])} />
+      {fuels.map((f) => (<>
+        <h2 class="mt-8 font-serif text-2xl font-bold text-navy-900">{f === 'ho' ? 'Heating oil' : 'Propane'} in {st.name}, winter by winter</h2>
+        <Fragment set:html={table(['Winter', 'Mid-October', 'November to March average', 'Season high'], seasonRows(f), `EIA weekly residential ${f === 'ho' ? 'heating oil' : 'propane'} prices for ${st.name}, excluding taxes; surveyed October to March.`, ['l', 'r', 'r', 'r'])} />
+      </>))}
+    </section>
+  </article>
+</PageLayout>

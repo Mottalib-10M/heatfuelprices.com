@@ -1,0 +1,182 @@
+{
+  "_readme": "Fixed values the calculators use, each read on the official source cited below on retrieved_at. Weekly prices live in eia.json / latest.json (scripts/update-data.py, every Wednesday); state facts and the EIA winter forecast live in states.json and winter.json (scripts/build-states.py).",
+  "year": 2026,
+  "retrieved_at": "2026-10-21",
+  "valid_from": "2026-10-01",
+  "valid_to": "2027-03-31",
+  "btu": {
+    "_basis": "EIA, British thermal units (Btu) explained: heating oil 138,500 Btu per gallon, propane 91,452 Btu per gallon, electricity 3,412 Btu per kilowatthour.",
+    "oil": 138500,
+    "propane": 91452,
+    "kwh": 3412
+  },
+  "propaneFill": {
+    "_basis": "29 CFR 1910.110(b)(12), Table H-27: an aboveground propane container of up to 1,200 gallons of water capacity may be filled to 42 % of the weight of water it holds when the gas has a specific gravity of 0.504 to 0.510 at 60 °F. Divided by that specific gravity, the liquid takes 82.4 % to 83.3 % of the tank's volume. The calculators start at 80 %, under that ceiling, and let the reader change it.",
+    "weightPct": 0.42,
+    "sgLow": 0.504,
+    "sgHigh": 0.51,
+    "defaultPct": 0.8
+  },
+  "liheap": {
+    "_basis": "42 U.S.C. 8624(b)(2)(B): a household is eligible when its income does not exceed the greater of 150 % of the poverty level or 60 % of the state median income; a state may not exclude a household under 110 % of the poverty level on income alone. HHS 2026 poverty guidelines for the 48 contiguous states and DC: $15,960 for one person plus $5,680 per additional person. 60 % of state median income by household size: ACF LIHEAP IM 2026-01, Attachment 4 (FY2027, mandatory use), sizes 1 to 8 (45 CFR 96.85 factors 52, 68, 84, 100, 116, 132, 135 and 138 % of the four-person figure).",
+    "fpgBase": 15960,
+    "fpgStep": 5680,
+    "fpgPct": 1.5,
+    "floorPct": 1.1,
+    "smiPct": 0.6,
+    "sizeFactors": [
+      0.52,
+      0.68,
+      0.84,
+      1,
+      1.16,
+      1.32,
+      1.35,
+      1.38
+    ],
+    "fiscalYear": "FY2027",
+    "fyStart": "2026-10-01",
+    "fyEnd": "2027-09-30"
+  },
+  "season": {
+    "_basis": "EIA Heating Oil and Propane Update: weekly heating oil and propane prices are only collected during the heating season, October through March; prices are in dollars per gallon, excluding taxes, and the previous week may be revised. EIA Winter Fuels Outlook: winter covers November 1 through March 31.",
+    "surveyFrom": "10",
+    "surveyTo": "03",
+    "winterFrom": "11-01",
+    "winterTo": "03-31"
+  },
+  "sources": {
+    "eia_shopp": {
+      "url": "https://www.eia.gov/petroleum/heatingoilpropane/",
+      "label": {
+        "en": "EIA, Heating Oil and Propane Update (weekly, October to March)"
+      }
+    },
+    "eia_ho_weekly": {
+      "url": "https://www.eia.gov/dnav/pet/pet_pri_wfr_a_EPD2F_prs_dpgal_w.htm",
+      "label": {
+        "en": "EIA, weekly residential heating oil prices by state"
+      }
+    },
+    "eia_pr_weekly": {
+      "url": "https://www.eia.gov/dnav/pet/pet_pri_wfr_a_EPLLPA_prs_dpgal_w.htm",
+      "label": {
+        "en": "EIA, weekly residential propane prices by state"
+      }
+    },
+    "eia_wfo": {
+      "url": "https://www.eia.gov/outlooks/steo/report/perspectives/2026/10-winterfuels/wf01.xlsx",
+      "label": {
+        "en": "EIA, Winter Fuels Outlook 2026-27, Table WF01 (October 2026)"
+      }
+    },
+    "eia_steo": {
+      "url": "https://www.eia.gov/outlooks/steo/",
+      "label": {
+        "en": "EIA, Short-Term Energy Outlook"
+      }
+    },
+    "eia_btu": {
+      "url": "https://www.eia.gov/energyexplained/units-and-calculators/british-thermal-units.php",
+      "label": {
+        "en": "EIA, British thermal units (Btu) explained"
+      }
+    },
+    "eia_heating_oil": {
+      "url": "https://www.eia.gov/energyexplained/heating-oil/",
+      "label": {
+        "en": "EIA, Heating oil explained"
+      }
+    },
+    "eia_propane_prices": {
+      "url": "https://www.eia.gov/energyexplained/hydrocarbon-gas-liquids/prices-for-hydrocarbon-gas-liquids.php",
+      "label": {
+        "en": "EIA, Prices for hydrocarbon gas liquids"
+      }
+    },
+    "eia_hgl_uses": {
+      "url": "https://www.eia.gov/energyexplained/hydrocarbon-gas-liquids/uses-of-hydrocarbon-gas-liquids.php",
+      "label": {
+        "en": "EIA, Uses of hydrocarbon gas liquids"
+      }
+    },
+    "eia_reuse": {
+      "url": "https://www.eia.gov/about/copyrights_reuse.php",
+      "label": {
+        "en": "EIA, Copyrights and reuse"
+      }
+    },
+    "nyserda_ho": {
+      "url": "https://data.ny.gov/d/rc94-5y2u",
+      "label": {
+        "en": "NYSERDA, Average home heating oil prices by region (data.ny.gov)"
+      }
+    },
+    "nyserda_pr": {
+      "url": "https://data.ny.gov/d/keug-6vc5",
+      "label": {
+        "en": "NYSERDA, Average residential propane prices by region (data.ny.gov)"
+      }
+    },
+    "noaa_hdd": {
+      "url": "https://ftp.cpc.ncep.noaa.gov/htdocs/degree_days/weighted/daily_data/climatology/1981-2010/StatesCONUS.Heating.txt",
+      "label": {
+        "en": "NOAA Climate Prediction Center, population-weighted heating degree day normals by state, 1981-2010"
+      }
+    },
+    "noaa_cpc_dd": {
+      "url": "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/cdus/degree_days/",
+      "label": {
+        "en": "NOAA Climate Prediction Center, degree days"
+      }
+    },
+    "acs_b25040": {
+      "url": "https://data.census.gov/table/ACSDT1Y2024.B25040",
+      "label": {
+        "en": "Census Bureau, American Community Survey 2024, Table B25040 House heating fuel"
+      }
+    },
+    "usc_8624": {
+      "url": "https://www.govinfo.gov/content/pkg/USCODE-2023-title42/html/USCODE-2023-title42-chap94-subchapII-sec8624.htm",
+      "label": {
+        "en": "42 U.S.C. 8624, LIHEAP applications and requirements"
+      }
+    },
+    "cfr_96_85": {
+      "url": "https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-A/part-96/subpart-H/section-96.85",
+      "label": {
+        "en": "45 CFR 96.85, income eligibility (household size factors)"
+      }
+    },
+    "acf_smi": {
+      "url": "https://acf.gov/sites/default/files/documents/ocs/COMM_LIHEAP_Att4SMITable_States_FY2027.pdf",
+      "label": {
+        "en": "ACF, LIHEAP state median income table FY2027 (IM 2026-01, Attachment 4)"
+      }
+    },
+    "aspe_fpg": {
+      "url": "https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines",
+      "label": {
+        "en": "HHS ASPE, 2026 poverty guidelines"
+      }
+    },
+    "osha_lpg": {
+      "url": "https://www.ecfr.gov/current/title-29/subtitle-B/chapter-XVII/part-1910/subpart-H/section-1910.110",
+      "label": {
+        "en": "29 CFR 1910.110, storage and handling of liquefied petroleum gases (Table H-27)"
+      }
+    },
+    "energystar_boilers": {
+      "url": "https://www.energystar.gov/products/boilers",
+      "label": {
+        "en": "ENERGY STAR, boilers (AFUE of certified oil and gas boilers)"
+      }
+    }
+  },
+  "efficiency": {
+    "_basis": "ENERGY STAR, boilers: certified boilers have an annual fuel utilization efficiency (AFUE) of 87 % or more for oil and 90 % or more for gas (propane included). Electric resistance heat turns all its electricity into heat in the home.",
+    "oil": 0.87,
+    "propane": 0.9,
+    "electric": 1
+  }
+}

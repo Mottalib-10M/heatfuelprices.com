@@ -1,0 +1,56 @@
+---
+/** Method: the data steps, the rules, the tests, the limits. Figures from the kit. */
+import PageLayout from '../../layouts/PageLayout.astro';
+import { route } from '../../i18n/routes';
+import { KIT as K } from '../../lib/kit';
+import { src, table } from '../../lib/helpers';
+import { breadcrumbSchema, webPageSchema } from '../../lib/seo';
+const lang = 'en';
+const path = route('method', lang);
+const P = K.P;
+const W = K.W;
+const title = 'Heating Oil and Propane Price Data Method, 2026-27 Season';
+const description = `Heating oil and propane price data method: EIA weekly survey of ${K.day(K.L.last_week)}, NYSERDA regions, NOAA degree days, the EIA winter forecast and LIHEAP rules.`;
+const oilRate = W.ho.US.gal.base / W.hdd.Northeast.base;
+const regions = ['Northeast', 'Midwest', 'South'].map((r) => [r, K.dec(W.pr[r].gal.base, 0), K.num(W.hdd[r].base), K.dec(W.pr[r].gal.base / W.hdd[r].base, 3)]);
+const lo = K.volumeFromDensity(P.propaneFill.weightPct, P.propaneFill.sgHigh), hi = K.volumeFromDensity(P.propaneFill.weightPct, P.propaneFill.sgLow);
+---
+<PageLayout title={title} description={description} lang={lang} jsonLd={[webPageSchema({ name: 'Where the prices come from', description, path, lang }), breadcrumbSchema([{ name: 'Home', path: route('home', lang) }, { name: 'Where the prices come from', path }])]} breadcrumbs={[{ label: 'Where the prices come from' }]}>
+  <article class="prose prose-slate max-w-none prose-headings:font-serif">
+    <h1>Where the prices come from</h1>
+    <p><strong>Every price on this site is a state average from the federal weekly survey of residential heating oil and propane, read the day it is published and dated to the week it describes.</strong> The latest survey covers the week of {K.day(K.L.last_week)}; the EIA released it on {K.day(K.L.release_date)} and announces the next release for {K.day(K.L.next_release)}. One script, run every Wednesday, reads the files and writes everything the pages show.</p>
+    <h2>1. The EIA weekly survey</h2>
+    <p>The Energy Information Administration runs the State Heating Oil and Propane Program with the states that take part. Each Monday from October through March, dealers in the sample report the price they charge households for No. 2 heating oil and for propane; the EIA publishes wholesale prices for the same weeks. The EIA publishes state, regional and national averages on Wednesday (<Fragment set:html={src('eia_shopp')} />). Prices are in dollars per gallon and exclude taxes. The previous week can be revised when late reports arrive, so the figure for a past week may move by a cent or two.</p>
+    <p>This week the survey publishes heating oil for {K.ranked('ho').length} states and propane for {K.ranked('pr').length}. The EIA's heating oil series for the District of Columbia stops in October 2019 and is not shown. The site keeps every week since October 2013: {K.sum('US', 'ho')!.seasons.length - 1} complete winters for most states, one fewer for the propane series that start in October 2014.</p>
+    <h2>2. What the pages compute from it</h2>
+    <ul>
+      <li><strong>This week</strong>: the last published week of each series, with the week before and the same week a year earlier (the survey week nearest to 364 days before, within three days).</li>
+      <li><strong>Winter average</strong>: the mean of the weekly prices from November 1 to March 31 of each season, the same months the EIA's winter forecast covers.</li>
+      <li><strong>Mid-October price</strong>: the survey week nearest October 15, the time of year dealers sell prebuy and capped contracts. The lock-in calculator compares it with the winter average of the same season, for every season on file.</li>
+      <li><strong>Dealer spread</strong>: the residential price minus the wholesale price of the same state and week, where both are published.</li>
+    </ul>
+    <h2>3. New York's regions</h2>
+    <p>NYSERDA publishes its own weekly averages for New York regions on the state's open data portal (<Fragment set:html={src('nyserda_ho', 'heating oil')} />, <Fragment set:html={src('nyserda_pr', 'propane')} />). The site reads them for Long Island, New York City, the Hudson Valley and the other regions. NYSERDA's statewide figure and the EIA's New York average come from different samples and can differ by a few cents.</p>
+    <h2>4. Winter budgets</h2>
+    <p>The EIA's Winter Fuels Outlook (<Fragment set:html={src('eia_wfo')} />, {W.release}) gives the gallons an average household burns from November to March and the heating degree days of each region. A heating degree day counts how far a day's mean temperature falls below 65 °F; fuel use follows it closely. The site turns the EIA's average household into gallons per degree day and multiplies by the normal November to March degree days of each state from NOAA's population-weighted normals for 1981-2010 (<Fragment set:html={src('noaa_hdd', 'NOAA CPC')} />).</p>
+    <p>Heating oil: the EIA publishes one U.S. figure, {K.gal(W.ho.US.gal.base)} a household. {K.pct(W.households.Northeast.ho / W.households.US.ho, 0)} of oil-heated households are in the Northeast ({K.num(W.households.Northeast.ho)} of {K.num(W.households.US.ho)}), so the site divides by the Northeast's degree days: {K.dec(oilRate, 3)} gallons per degree day. Propane uses each region's own figures; the West, for which the EIA publishes no propane row, uses the U.S. average.</p>
+    <Fragment set:html={table(['Region', 'Propane gallons a winter', 'Degree days, Nov-Mar forecast', 'Gallons per degree day'], [...regions, ['U.S. (and West)', K.dec(W.pr.US.gal.base, 0), K.num(W.hdd.US.base), K.dec(W.pr.US.gal.base / W.hdd.US.base, 3)]], 'EIA Winter Fuels Outlook 2026-27, Table WF01, normal-weather forecast.', ['l', 'r', 'r', 'r'])} />
+    <p>Warmer and colder winters apply the ratio between the EIA's scenario and its normal forecast. When you enter your own gallons from last winter, they replace the estimate. Gallons include what the furnace or boiler uses for hot water, as the EIA counts them.</p>
+    <h2>5. Filling a tank</h2>
+    <p>Gallons delivered = tank size × (fill level − gauge reading). For propane, 29 CFR 1910.110 caps the filling of an aboveground tank of up to 1,200 gallons at {K.pct(P.propaneFill.weightPct, 0)} of the weight of water it holds, for propane of specific gravity {P.propaneFill.sgLow} to {P.propaneFill.sgHigh} (<Fragment set:html={src('osha_lpg', 'Table H-27')} />). Divided by that specific gravity, the liquid fills {K.pct(lo)} to {K.pct(hi)} of the tank; the calculators start at {K.pct(P.propaneFill.defaultPct, 0)}, under that ceiling, and you can change it. Heating oil tanks have no such rule; the calculators fill to 100 % to give the most a delivery can cost.</p>
+    <h2>6. LIHEAP and heat comparisons</h2>
+    <p>The federal ceiling of 42 U.S.C. 8624(b)(2)(B) is the greater of 150 % of the HHS poverty guideline and 60 % of the state median income (<Fragment set:html={src('usc_8624', '42 U.S.C. 8624')} />). Poverty guidelines 2026: {K.usd(P.liheap.fpgBase)} for one person plus {K.usd(P.liheap.fpgStep)} for each other person (<Fragment set:html={src('aspe_fpg', 'HHS')} />). State median incomes: ACF's table for {P.liheap.fiscalYear} (<Fragment set:html={src('acf_smi', 'Attachment 4')} />). States may set a lower limit, never below 110 % of the poverty line.</p>
+    <p>Heat comparisons divide the price by the Btu content of a gallon or a kilowatthour ({K.num(P.btu.oil)} Btu for heating oil, {K.num(P.btu.propane)} for propane, {K.num(P.btu.kwh)} per kWh, <Fragment set:html={src('eia_btu', 'EIA')} />) and by the efficiency of the equipment, starting at the ENERGY STAR minimum for certified boilers ({K.pct(P.efficiency.oil, 0)} oil, {K.pct(P.efficiency.propane, 0)} gas, <Fragment set:html={src('energystar_boilers', 'ENERGY STAR')} />).</p>
+    <h2>7. Tests</h2>
+    <p>The arithmetic runs in one engine file with automated tests on known cases: a 500-gallon propane tank at 30 % filled to 80 % takes 250 gallons; a household of three under the LIHEAP rule gets the greater of the two federal lines; a tank burning a fixed rate per degree day runs out in the month the normals predict. Each weekly import is checked for a U.S. average and dates in order before the site is rebuilt.</p>
+    <h2>8. What is not modeled</h2>
+    <ul>
+      <li>Your dealer's own price, delivery fees, minimum delivery charges and service plans.</li>
+      <li>State and local taxes: the EIA excludes them, and the calculators add a rate only if you enter one.</li>
+      <li>Kerosene, wood pellets and natural gas from a utility.</li>
+      <li>Any week outside October to March, when the EIA does not survey.</li>
+    </ul>
+    <h2>9. Terms of the data</h2>
+    <p>EIA data are public domain; the EIA asks that it be cited (<Fragment set:html={src('eia_reuse')} />). Source: U.S. Energy Information Administration, State Heating Oil and Propane Program and Short-Term Energy Outlook, read on {K.day(K.L.retrieved_at)}. NYSERDA data are published under New York's open data terms. Corrections: <a href={route('contact', lang)}>contact page</a>.</p>
+  </article>
+</PageLayout>

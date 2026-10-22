@@ -1,0 +1,27 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import LegalIdentity from '../../components/LegalIdentity.astro';
+import { CONTACT_EMAIL } from '../../data/site-config';
+import { route } from '../../i18n/routes';
+import { contactPageSchema } from '../../lib/seo';
+const lang = 'en';
+const path = route('contact', lang);
+const description = 'Write to the publisher of Heating Fuel Week about a price, a state figure or a source. E-mail only: no dealer referral, no quote, nothing passed on to anyone.';
+---
+<PageLayout title="Contact Heating Fuel Week: corrections to a price or a source" description={description} lang={lang} noindex={true} jsonLd={[contactPageSchema({ name: 'Contact', description, path, lang })]} breadcrumbs={[{ label: 'Contact' }]} showAuthor={false}>
+  <div class="prose prose-slate max-w-none prose-headings:font-serif">
+    <h1>Contact</h1>
+    <p>By e-mail: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. No form and no phone line: a fuel price page that asks for your ZIP code and number is usually about to sell it to dealers, and this one passes nothing on.</p>
+    <h2>Messages that help</h2>
+    <ul>
+      <li>A weekly price that differs from the EIA table of the same week: name the state, the fuel and the date.</li>
+      <li>A LIHEAP limit that your state publishes lower than the federal ceiling shown: send the page of the state agency.</li>
+      <li>A delivery ticket that shows a fill rule or a fee the calculators do not cover, without your name or account number.</li>
+      <li>Embedding the price lookup on a local news site, a town page or a forum: the code is on the <a href={route('widget', lang)}>embed page</a>.</li>
+    </ul>
+    <h2>What we cannot do</h2>
+    <p>We do not sell fuel, recommend a dealer or negotiate a contract. For a delivery, call a dealer; for heating assistance, your state's LIHEAP office; for a no-heat emergency, your local emergency services.</p>
+    <h2>Publisher</h2>
+    <LegalIdentity lang={lang} />
+  </div>
+</PageLayout>

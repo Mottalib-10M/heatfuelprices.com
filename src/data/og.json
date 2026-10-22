@@ -1,0 +1,13 @@
+{
+ "accent": "#1F3A6E",
+ "symbol": "gal",
+ "variants": [
+  {
+   "file": "og-en.png",
+   "title": "Heating oil and propane\nprices this week, by state",
+   "subtitle": "Tank fill · winter budget · lock in or wait · LIHEAP limit",
+   "badge": "EIA weekly survey, excluding taxes, read every Wednesday",
+   "brand": "Heating Fuel Week"
+  }
+ ]
+}

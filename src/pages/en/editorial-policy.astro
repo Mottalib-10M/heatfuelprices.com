@@ -1,0 +1,21 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import { route } from '../../i18n/routes';
+import { AUTHOR_NAME, REVIEW_CYCLE_MONTHS } from '../../data/site-config';
+const lang = 'en';
+---
+<PageLayout title="Editorial policy of Heating Fuel Week: federal data, dated prices" description="How Heating Fuel Week writes its pages: weekly federal prices read by a script, every figure dated, forecasts labeled as forecasts, and no money from fuel dealers or suppliers." lang={lang} noindex={true} breadcrumbs={[{ label: 'Editorial policy' }]} showAuthor={false}>
+  <div class="prose prose-slate max-w-none prose-headings:font-serif">
+    <h1>Editorial policy</h1>
+    <h2>What counts as a source</h2>
+    <p>Prices come from the Energy Information Administration's weekly survey of residential heating oil and propane and, for the regions of New York, from NYSERDA's survey on the state's open data portal. Winter forecasts come from the EIA's Short-Term Energy Outlook. Rules come from federal law and regulation: the LIHEAP statute and its income tables, and the federal safety rule that limits how full a propane tank may be. Dealer websites and price comparison sites are read to know what people ask, never as a source of a number.</p>
+    <h2>How a figure reaches a page</h2>
+    <p>No price is typed into the text. A script reads the EIA files every Wednesday and writes the summaries the pages use; a second script reads the yearly files (degree days, heating fuel counts, income tables, winter forecast). Each page shows the week of the survey it quotes. When the EIA does not publish a state for a fuel, the page says so and uses the U.S. average, labeled as such.</p>
+    <h2>Estimates and forecasts are labeled</h2>
+    <p>A winter budget is an estimate built on an average home and normal weather; a forecast is the EIA's, with its month of publication. Neither is presented as a price you will pay. A figure we cannot trace to an official file is not published.</p>
+    <h2>Independence</h2>
+    <p>{AUTHOR_NAME} receives nothing from fuel dealers, propane suppliers, contract brokers or lead buyers and links to none of them. There is no advertising today; if some is added it will be labeled, limited to three places a page, and never come from a firm selling heating fuel.</p>
+    <h2>Review and corrections</h2>
+    <p>Prices refresh each week of the heating season. The site is reviewed at least every {REVIEW_CYCLE_MONTHS} months and when the EIA, NOAA, the Census Bureau or HHS publish new tables. A reported error is checked against the source and, once fixed, moves the date shown on the page. Write through the <a href={route('contact', lang)}>contact page</a>; the data steps are on the <a href={route('method', lang)}>method page</a>.</p>
+  </div>
+</PageLayout>

@@ -1,0 +1,38 @@
+---
+/**
+ * Weekly price of this heating season against last season, drawn at build time (SVG, no script).
+ * Data: series.json (scripts/update-data.py). data-chrome: generated labels are not page prose.
+ */
+import SERIES from '../data/series.json';
+import { formatMoney } from '../lib/format';
+import { longDate } from '../lib/tool-specs';
+interface Props { code: string; fuel: 'ho' | 'pr'; name: string }
+const { code, fuel, name } = Astro.props;
+type Pt = [string, number];
+const d = (SERIES as unknown as Record<string, Record<string, { cur: Pt[]; lastSeason: Pt[] | null }>>)[fuel]?.[code];
+const W = 640, H = 220, padL = 52, padR = 12, padT = 14, padB = 30;
+// x = week of the season (first Monday of October = 0), so both seasons share the axis.
+const wk = (iso: string) => { const t = new Date(`${iso}T00:00:00Z`); const y = t.getUTCMonth() >= 9 ? t.getUTCFullYear() : t.getUTCFullYear() - 1; return (t.getTime() - Date.UTC(y, 9, 1)) / 6.048e8; };
+const all = d ? [...d.cur, ...(d.lastSeason ?? [])].map((p) => p[1]) : [];
+const lo = all.length ? Math.floor(Math.min(...all) * 4) / 4 : 0, hi = all.length ? Math.ceil(Math.max(...all) * 4) / 4 : 1;
+const X = (w: number) => padL + (w / 26) * (W - padL - padR);
+const Y = (v: number) => padT + (1 - (v - lo) / (hi - lo || 1)) * (H - padT - padB);
+const path = (pts: Pt[]) => pts.map((p, i) => `${i ? 'L' : 'M'}${X(wk(p[0])).toFixed(1)},${Y(p[1]).toFixed(1)}`).join(' ');
+const ticks: number[] = []; for (let v = lo; v <= hi + 1e-9; v += (hi - lo) / 4) ticks.push(v);
+const months = [['Oct', 0], ['Nov', 4.4], ['Dec', 8.7], ['Jan', 13.1], ['Feb', 17.6], ['Mar', 21.6]] as const;
+const label = fuel === 'ho' ? 'heating oil' : 'propane';
+const cur = d?.cur ?? [];
+const last = d?.lastSeason ?? [];
+---
+{d && (
+  <figure data-chrome class="not-prose my-6">
+    <svg viewBox={`0 0 ${W} ${H}`} class="h-auto w-full" role="img" aria-label={`Weekly ${label} price in ${name}: this season and last season`}>
+      {ticks.map((v) => <g><line x1={padL} x2={W - padR} y1={Y(v)} y2={Y(v)} stroke="currentColor" class="text-navy-100" /><text x={padL - 6} y={Y(v) + 4} text-anchor="end" font-size="11" fill="currentColor" class="text-navy-600">{formatMoney(v, 2)}</text></g>)}
+      {months.map(([m, w]) => <text x={X(w)} y={H - 10} font-size="11" fill="currentColor" class="text-navy-600">{m}</text>)}
+      {last.length > 1 && <path d={path(last)} fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="5 4" class="text-navy-400" />}
+      {cur.length > 0 && <path d={path(cur)} fill="none" stroke="currentColor" stroke-width="3" class="text-accent-600" />}
+      {cur.length > 0 && <circle cx={X(wk(cur[cur.length - 1][0]))} cy={Y(cur[cur.length - 1][1])} r="4" fill="currentColor" class="text-accent-700" />}
+    </svg>
+    <figcaption class="mt-1 text-sm text-navy-600">Solid line: {label} in {name} this season, {cur.length} {cur.length === 1 ? 'week' : 'weeks'} to {cur.length ? longDate(cur[cur.length - 1][0]) : ''}. Dashed line: last season{last.length ? `, ${longDate(last[0][0])} to ${longDate(last[last.length - 1][0])}` : ''}. EIA weekly survey, excluding taxes.</figcaption>
+  </figure>
+)}
