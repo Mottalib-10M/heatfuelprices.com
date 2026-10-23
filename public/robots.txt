@@ -3,4 +3,4 @@ Allow: /
 
 Disallow: /*?*
 
-Sitemap: https://us-heating-oil-propane.example/sitemap-index.xml
+Sitemap: https://heatfuelprices.com/sitemap-index.xml

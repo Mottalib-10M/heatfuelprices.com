@@ -1,6 +1,6 @@
 {
- "name": "Heating Fuel Week",
- "short_name": "Heating Fuel Week",
+ "name": "Heat Fuel Prices",
+ "short_name": "Heat Fuel Prices",
  "description": "Heating oil and propane prices by state from this week's federal survey, with the cost of filling your tank, a winter budget and a lock-in check.",
  "start_url": "/en/",
  "display": "standalone",

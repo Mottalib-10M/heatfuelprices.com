@@ -1,6 +1,6 @@
 /** Configuration centrale du site (générée par new-site.py). */
-export const SITE_URL = "https://us-heating-oil-propane.example";
-export const SITE_NAMES: Record<string, string> = {"en": "Heating Fuel Week"};
+export const SITE_URL = "https://heatfuelprices.com";
+export const SITE_NAMES: Record<string, string> = {"en": "Heat Fuel Prices"};
 export const LANG_TAGS: Record<string, string> = {"en": "en-US"};
 export const OG_LOCALES: Record<string, string> = {"en": "en_US"};
 export const LOCALE_TAG = 'en-US';
@@ -16,7 +16,7 @@ export const AUTHOR_DESC: Record<string, string> = {"en": "Radif Partners reads 
  *  themes reellement traites par le site, pas une liste de mots-cles : un sujet
  *  declare ici sans page qui le couvre est une declaration fausse. */
 export const KNOWS_ABOUT: Record<string, string[]> = {"en": ["Residential heating oil prices by state", "Residential propane prices by state", "Heating oil tank fill cost", "Propane tank 80% fill rule", "Winter heating budget from degree days", "Heating oil and propane prebuy and price-cap contracts", "LIHEAP income limits"]};
-export const CONTACT_EMAIL = "contact@us-heating-oil-propane.example";
+export const CONTACT_EMAIL = "contact@heatfuelprices.com";
 export const THEME_COLOR = '#1F3A6E';
 export const LOGO_SYMBOL = 'gal';
 export const BING_VERIFY_CODE = '';

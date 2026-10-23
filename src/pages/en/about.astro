@@ -8,12 +8,12 @@ import { VALUE } from '../../content/home';
 import { profilePageSchema, breadcrumbSchema } from '../../lib/seo';
 const lang = 'en';
 const path = route('about', lang);
-const title = 'Heating fuel price publisher: who runs Heating Fuel Week';
-const description = 'Heating Fuel Week is published by Radif Partners from the federal weekly survey of heating oil and propane prices: no dealer listed, no ZIP code or phone asked.';
+const title = 'Heating fuel price publisher: who runs Heat Fuel Prices';
+const description = 'Heat Fuel Prices is published by Radif Partners from the federal weekly survey of heating oil and propane prices: no dealer listed, no ZIP code or phone asked.';
 ---
 <PageLayout title={title} description={description} lang={lang} jsonLd={[profilePageSchema({ path, lang }), breadcrumbSchema([{ name: 'Home', path: route('home', lang) }, { name: 'About', path }])]} breadcrumbs={[{ label: 'About' }]}>
   <article class="prose prose-slate max-w-none prose-headings:font-serif">
-    <h1>About Heating Fuel Week</h1>
+    <h1>About Heat Fuel Prices</h1>
     <p>{AUTHOR_DESC.en}</p>
     <h2>The gap this site fills</h2>
     <p>Every Wednesday from October to March, the federal government publishes what households pay for heating oil and propane in 38 states. The tables are accurate and dry: prices to the tenth of a cent, without taxes, without the cost of a delivery, without a word on whether this winter is cheap or dear. The pages that rank for "heating oil prices" or "propane prices" are mostly dealer directories, lead forms that want your ZIP code and phone number, or copies of the federal table with the arithmetic done wrong. A household with a tank in the basement or in the yard wants three answers: what will the next fill cost, what will the whole winter cost, and should it sign the fixed-price contract its dealer is offering.</p>

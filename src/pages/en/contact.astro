@@ -6,9 +6,9 @@ import { route } from '../../i18n/routes';
 import { contactPageSchema } from '../../lib/seo';
 const lang = 'en';
 const path = route('contact', lang);
-const description = 'Write to the publisher of Heating Fuel Week about a price, a state figure or a source. E-mail only: no dealer referral, no quote, nothing passed on to anyone.';
+const description = 'Write to the publisher of Heat Fuel Prices about a price, a state figure or a source. E-mail only: no dealer referral, no quote, nothing passed on to anyone.';
 ---
-<PageLayout title="Contact Heating Fuel Week: corrections to a price or a source" description={description} lang={lang} noindex={true} jsonLd={[contactPageSchema({ name: 'Contact', description, path, lang })]} breadcrumbs={[{ label: 'Contact' }]} showAuthor={false}>
+<PageLayout title="Contact Heat Fuel Prices: corrections to a price or a source" description={description} lang={lang} noindex={true} jsonLd={[contactPageSchema({ name: 'Contact', description, path, lang })]} breadcrumbs={[{ label: 'Contact' }]} showAuthor={false}>
   <div class="prose prose-slate max-w-none prose-headings:font-serif">
     <h1>Contact</h1>
     <p>By e-mail: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. No form and no phone line: a fuel price page that asks for your ZIP code and number is usually about to sell it to dealers, and this one passes nothing on.</p>
